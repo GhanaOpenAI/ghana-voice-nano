@@ -1,0 +1,28 @@
+# Training / data prep / export (GPU machine). Inference needs only `pip install ghana-voice-nano`.
+lightning>=2.0
+hydra-core==1.3.2
+hydra-colorlog==1.2.0
+rootutils
+rich
+tensorboard
+phonemizer
+librosa
+soundfile
+Cython
+setuptools
+numpy
+einops
+inflect
+Unidecode
+scipy
+matplotlib
+conformer==0.3.2
+diffusers
+datasets==2.21.0   # datasets>=3 needs torchcodec to decode audio
+huggingface_hub
+tqdm
+gdown
+wget
+onnx
+onnxruntime
+sherpa-onnx>=1.12,<2

@@ -1,0 +1,19 @@
+defaults:
+  - model_summary.yaml
+  - rich_progress_bar.yaml
+  - tf32.yaml            # TF32 matmuls on Ampere/Hopper GPUs
+  - early_stopping.yaml  # stops when sub_loss/val_diff_loss has not improved for 5 epochs
+  - _self_
+
+# Keep the best checkpoints by the flow-matching (acoustic) validation loss. Total val loss is
+# dominated by the noisy duration loss and is a poor guide to audio quality.
+model_checkpoint:
+  _target_: lightning.pytorch.callbacks.ModelCheckpoint
+  dirpath: ${paths.output_dir}/checkpoints
+  filename: "epoch{epoch:03d}"
+  auto_insert_metric_name: false
+  monitor: sub_loss/val_diff_loss
+  mode: min
+  save_top_k: 3
+  save_last: true
+  every_n_epochs: 1

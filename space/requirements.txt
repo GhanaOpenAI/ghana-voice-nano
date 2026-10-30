@@ -1,0 +1,1 @@
+ghana-voice-nano @ git+https://github.com/ghanaopenai/ghana-voice-nano

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ghana-voice-nano"
+version = "0.1.0"
+description = "Small, fast, offline text-to-speech for Ghanaian languages (Matcha-TTS + Vocos on sherpa-onnx)"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "GhanaOpenAI" }]
+dependencies = ["sherpa-onnx>=1.12,<2", "numpy", "huggingface_hub>=0.20"]
+
+[project.optional-dependencies]
+serve = ["fastapi", "uvicorn"]
+
+[project.scripts]
+ghana-voice-nano = "ghana_voice_nano.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ghanaopenai/ghana-voice-nano"
+
+[tool.setuptools]
+packages = ["ghana_voice_nano"]
