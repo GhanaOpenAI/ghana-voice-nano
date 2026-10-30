@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ghana Voice Nano · Twi</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E🗣️%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Fast offline Asante Twi text-to-speech: Matcha-TTS + Vocos on sherpa-onnx">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4ef; --card: #ffffff; --ink: #1c1b19; --muted: #6b675f; --line: #e3dfd6;
+    --accent: #0f6b4a; --accent-ink: #ffffff; --accent-soft: #e4f1eb; --gold: #c8901a; --err: #a3271d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #141412; --card: #1d1c1a; --ink: #eeebe4; --muted: #a39e94; --line: #34322e;
+            --accent: #3fb586; --accent-ink: #0d1f17; --accent-soft: #1d3329; --gold: #e0ad45; --err: #f08a80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 Inter, system-ui, sans-serif; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  .flag { height: 6px; border-radius: 3px; margin-bottom: 28px;
+          background: linear-gradient(90deg, #ce1126 0 33.3%, #fcd116 33.3% 66.6%, #006b3f 66.6%); }
+  h1 { font-size: clamp(26px, 5vw, 36px); line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--muted); margin: 0 0 24px; max-width: 640px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  label.t { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  textarea { width: 100%; min-height: 150px; resize: vertical; padding: 12px 14px; font: inherit;
+             color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
+  textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .count { font-size: 12px; color: var(--muted); text-align: right; margin-top: 4px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; margin: 14px 0 18px; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .seg input { display: none; }
+  .seg label { padding: 8px 14px; font-size: 14px; cursor: pointer; color: var(--muted); }
+  .seg input:checked + label { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+  .speed { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .speed input { accent-color: var(--accent); width: 150px; }
+  button.go { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px;
+              padding: 12px 22px; font: 600 15px Inter, system-ui, sans-serif; cursor: pointer; }
+  button.go:disabled { opacity: .55; cursor: progress; }
+  .out { margin-top: 18px; }
+  audio { width: 100%; }
+  .stats { font-size: 14px; color: var(--muted); margin-top: 8px; min-height: 22px; }
+  .stats b { color: var(--ink); }
+  .stats.err { color: var(--err); }
+  h2 { font-size: 15px; margin: 28px 0 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px;
+          padding: 7px 14px; font: 14px Inter, system-ui, sans-serif; cursor: pointer; text-align: left; }
+  .chip:hover { border-color: var(--accent); }
+  .chip small { color: var(--muted); }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-top: 28px; }
+  .fact { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; font-size: 14px; }
+  .fact b { display: block; font-size: 18px; margin-bottom: 2px; }
+  .links { margin-top: 28px; font-size: 14px; color: var(--muted); }
+  .links a { color: var(--accent); }
+  code { font-size: 13px; background: var(--accent-soft); padding: 1px 6px; border-radius: 5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="flag" aria-hidden="true"></div>
+  <h1>Ghana Voice Nano · Asante Twi</h1>
+  <p class="lede">Small, fast text-to-speech for Twi. The same model runs offline on phones, in the browser and on
+    any CPU through sherpa-onnx. It is non-autoregressive, so it stays stable across whole paragraphs.</p>
+
+  <div class="card">
+    <label class="t" for="text">Twi text</label>
+    <textarea id="text" maxlength="5000">Awurade ne me hwɛfoɔ, biribiara renhia me.</textarea>
+    <div class="count"><span id="count">0</span> / 5000</div>
+
+    <div class="controls">
+      <div class="seg" role="radiogroup" aria-label="Quality">
+        <input type="radio" name="variant" id="v4" value="steps4" checked><label for="v4">Best quality</label>
+        <input type="radio" name="variant" id="v2" value="steps2"><label for="v2">Fastest</label>
+      </div>
+      <div class="speed">
+        <label for="speed">Speaking rate</label>
+        <input type="range" id="speed" min="0.5" max="2" step="0.05" value="1">
+        <span id="speedv">1.00×</span>
+      </div>
+    </div>
+
+    <button class="go" id="go">Speak</button>
+    <div class="out">
+      <audio id="audio" controls hidden></audio>
+      <div class="stats" id="stats" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <h2>Short phrases</h2>
+  <div class="chips" id="short"></div>
+  <h2>Long text</h2>
+  <div class="chips" id="long"></div>
+
+  <div class="facts">
+    <div class="fact"><b>~18M</b>parameters (Matcha-TTS)</div>
+    <div class="fact"><b>13–16×</b>realtime on 2 CPU threads</div>
+    <div class="fact"><b>Offline</b>Android, iOS, web, desktop</div>
+    <div class="fact"><b>22 kHz</b>Vocos vocoder</div>
+  </div>
+
+  <p class="links">
+    This demo calls the Ghana Voice Nano API (CPU, sherpa-onnx); the first request after a quiet spell
+    takes a few seconds while a server wakes up.<br>
+    Model: <a href="https://huggingface.co/ghanaopenai/ghana-voice-nano-twi">ghanaopenai/ghana-voice-nano-twi</a> ·
+    Code, training recipe and mobile guide:
+    <a href="https://github.com/GhanaOpenAI/ghana-voice-nano">GhanaOpenAI/ghana-voice-nano</a> ·
+    Run it yourself: <code>pip install git+https://github.com/GhanaOpenAI/ghana-voice-nano</code>
+  </p>
+</div>
+
+<script>
+const API = "https://michseth--ghana-voice-nano-tts-web.us-east.modal.run/tts";
+const SHORT = [
+  "Awurade ne me hwɛfoɔ, biribiara renhia me.",
+  "Mema wo akye. Wo ho te sɛn?",
+  "Ghana yɛ ɔman a ɛwɔ Afrika atɔeɛ fam.",
+];
+const $ = (id) => document.getElementById(id);
+const text = $("text"), go = $("go"), audio = $("audio"), stats = $("stats");
+let lastUrl = null;
+
+function updateCount() { $("count").textContent = text.value.length; }
+text.addEventListener("input", updateCount);
+updateCount();
+$("speed").addEventListener("input", (e) => { $("speedv").textContent = Number(e.target.value).toFixed(2) + "×"; });
+
+function chip(container, label, value, sub) {
+  const b = document.createElement("button");
+  b.className = "chip";
+  b.textContent = label;
+  if (sub) { const s = document.createElement("small"); s.textContent = " · " + sub; b.appendChild(s); }
+  b.onclick = () => { text.value = value; updateCount(); text.focus(); };
+  container.appendChild(b);
+}
+SHORT.forEach((s) => chip($("short"), s, s));
+fetch("long_samples.json").then((r) => r.json()).then((items) => {
+  items.forEach((s) => chip($("long"), s.twi.slice(0, 42).trim() + "…", s.twi, `${s.num_sentences} sentences`));
+}).catch(() => {});
+
+async function speak() {
+  const t = text.value.trim();
+  if (!t) { stats.className = "stats err"; stats.textContent = "Type some Twi text first."; return; }
+  const variant = document.querySelector("input[name=variant]:checked").value;
+  go.disabled = true;
+  stats.className = "stats";
+  stats.textContent = "Synthesizing…";
+  const slow = setTimeout(() => { stats.textContent = "Waking up the server (first request takes a few seconds)…"; }, 2500);
+  const t0 = performance.now();
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: t, speed: Number($("speed").value), variant }),
+    });
+    if (!res.ok) {
+      let msg = res.status + " " + res.statusText;
+      try { msg = (await res.json()).detail || msg; } catch (e) {}
+      throw new Error(typeof msg === "string" ? msg : JSON.stringify(msg));
+    }
+    const blob = await res.blob();
+    if (lastUrl) URL.revokeObjectURL(lastUrl);
+    lastUrl = URL.createObjectURL(blob);
+    audio.src = lastUrl;
+    audio.hidden = false;
+    audio.play().catch(() => {});
+    const secs = Number(res.headers.get("X-Audio-Seconds"));
+    const synth = Number(res.headers.get("X-Synthesis-Seconds"));
+    const total = (performance.now() - t0) / 1000;
+    stats.innerHTML = secs && synth
+      ? `<b>${secs.toFixed(1)}s</b> of speech synthesized in <b>${synth.toFixed(2)}s</b> ` +
+        `(<b>${(secs / synth).toFixed(1)}× realtime</b> on 2 CPU cores) · ${total.toFixed(1)}s round trip`
+      : `Done in ${total.toFixed(1)}s`;
+  } catch (e) {
+    stats.className = "stats err";
+    stats.textContent = "Could not synthesize: " + e.message;
+  } finally {
+    clearTimeout(slow);
+    go.disabled = false;
+  }
+}
+go.addEventListener("click", speak);
+text.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") speak(); });
+</script>
+</body>
+</html>

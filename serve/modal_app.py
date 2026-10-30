@@ -63,7 +63,9 @@ class TTS:
         from ghana_voice_nano import to_wav_bytes
 
         api = FastAPI(title="Ghana Voice Nano TTS", version="0.1.0")
-        api.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+        # Open CORS so browser pages (e.g. the static HF Space) can call the API and read the timings.
+        api.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
+                           expose_headers=["X-Audio-Seconds", "X-Synthesis-Seconds"])
 
         class Request(BaseModel):
             text: str = Field(..., max_length=MAX_CHARS)

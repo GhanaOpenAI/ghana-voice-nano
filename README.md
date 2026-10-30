@@ -18,7 +18,7 @@ a new voice for another language.
 ghana_voice_nano/   inference package (sherpa-onnx): Python API + CLI
 recipe/             data prep -> training -> sherpa-onnx export (GPU)
 serve/              HTTP API on Modal
-space/              Hugging Face Space demo
+space/              static Hugging Face Space page (calls the API)
 mobile/             packaging + Android / iOS / Flutter / web guide
 ```
 
