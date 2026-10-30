@@ -1,1 +1,5 @@
-ghana-voice-nano @ git+https://github.com/ghanaopenai/ghana-voice-nano
+# The ghana_voice_nano package folder is uploaded next to app.py when deploying the Space,
+# so the Space needs only its runtime dependencies.
+sherpa-onnx>=1.12,<2
+numpy
+huggingface_hub>=0.20
