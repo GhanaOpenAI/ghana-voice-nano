@@ -94,9 +94,10 @@ class GhanaVoiceNano:
 
 
 def save_wav(path, audio, sample_rate):
-    """Write float audio as 16-bit mono WAV with the standard library only."""
+    """Write float audio as 16-bit mono WAV with the standard library only.
+    ``path`` may be a file path or a binary file object."""
     pcm = (np.clip(audio, -1.0, 1.0) * 32767).astype("<i2")
-    with wave.open(str(path), "wb") as w:
+    with wave.open(path if hasattr(path, "write") else str(path), "wb") as w:
         w.setnchannels(1)
         w.setsampwidth(2)
         w.setframerate(sample_rate)
